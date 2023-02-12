@@ -136,4 +136,12 @@ class EventController extends Controller
 
         return redirect(route('events.index'));
     }
+
+    public function showData()
+    {
+        $events = Event::all();
+        return view('events.show_data', [
+            'events' => $events,
+        ]);
+    }
 }

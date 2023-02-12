@@ -16,4 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [EventController::class, 'index']);
 
+Route::get('/events/show-data', [EventController::class, 'showData']);
+
 Route::resource('events', EventController::class);
