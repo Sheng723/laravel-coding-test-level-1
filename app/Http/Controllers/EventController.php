@@ -6,6 +6,7 @@ use App\Http\Requests\CreateEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Mail\EventCreated;
 use App\Models\Event;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class EventController extends Controller
@@ -17,7 +18,14 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::paginate(5);
+        $cachedEvents = Cache::get('events');
+
+        if (isset($cachedEvents)) {
+            $events = $cachedEvents;
+        } else {
+            $events = Event::paginate(5);
+            Cache::put('events', $events);
+        }
 
         return view('dashboard', [
             'events' => $events,
