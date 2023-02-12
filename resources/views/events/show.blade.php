@@ -30,6 +30,6 @@
                 </tbody>
             </table>
         </div>
-        <a class="btn btn-primary float-end" href="{{ route('events.index') }}">Back</a>
+        <a class="btn btn-primary float-end" href="{{ route('dashboard') }}">Back</a>
     </div>
 @endsection

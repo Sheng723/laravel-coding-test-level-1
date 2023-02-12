@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Mail\EventCreated;
 use App\Models\Event;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 
 class EventController extends Controller
 {
@@ -15,9 +18,16 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::paginate(5);
+        $cachedEvents = Cache::get('events');
 
-        return view('events.index', [
+        if (isset($cachedEvents)) {
+            $events = $cachedEvents;
+        } else {
+            $events = Event::paginate(5);
+            Cache::put('events', $events);
+        }
+
+        return view('dashboard', [
             'events' => $events,
         ]);
     }
@@ -43,12 +53,13 @@ class EventController extends Controller
         $event = Event::create($request->all());
 
         if ($event) {
+            Mail::to('example@gmail.com')->queue(new EventCreated($event));
             flash('Event data is stored successfully')->success();
         } else {
             flash('Sorry! Please try again.')->error();
         }
 
-        return redirect(route('events.index'));
+        return redirect(route('dashboard'));
     }
 
     /**
@@ -64,7 +75,7 @@ class EventController extends Controller
         if (! $selectedEvent) {
             flash('Data not found! Please try again.')->error();
 
-            return redirect(route('events.index'));
+            return redirect(route('dashboard'));
         }
 
         return view('events.show', [
@@ -85,7 +96,7 @@ class EventController extends Controller
         if (! $selectedEvent) {
             flash('Data not found! Please try again.')->error();
 
-            return redirect(route('events.index'));
+            return redirect(route('dashboard'));
         }
 
         return view('events.edit', [
@@ -111,7 +122,7 @@ class EventController extends Controller
             flash('Sorry! Please try again.')->error();
         }
 
-        return redirect(route('events.index'));
+        return redirect(route('dashboard'));
     }
 
     /**
@@ -131,6 +142,15 @@ class EventController extends Controller
             flash('Sorry! Please try again.')->error();
         }
 
-        return redirect(route('events.index'));
+        return redirect(route('dashboard'));
+    }
+
+    public function showData()
+    {
+        $events = Event::all();
+
+        return view('events.show_data', [
+            'events' => $events,
+        ]);
     }
 }
