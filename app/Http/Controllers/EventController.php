@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Mail\EventCreated;
 use App\Models\Event;
+use Illuminate\Support\Facades\Mail;
 
 class EventController extends Controller
 {
@@ -43,6 +45,7 @@ class EventController extends Controller
         $event = Event::create($request->all());
 
         if ($event) {
+            Mail::to('example@gmail.com')->queue(new EventCreated($event));
             flash('Event data is stored successfully')->success();
         } else {
             flash('Sorry! Please try again.')->error();
