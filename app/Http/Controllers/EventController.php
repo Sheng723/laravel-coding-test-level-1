@@ -19,7 +19,7 @@ class EventController extends Controller
     {
         $events = Event::paginate(5);
 
-        return view('events.index', [
+        return view('dashboard', [
             'events' => $events,
         ]);
     }
@@ -51,7 +51,7 @@ class EventController extends Controller
             flash('Sorry! Please try again.')->error();
         }
 
-        return redirect(route('events.index'));
+        return redirect(route('dashboard'));
     }
 
     /**
@@ -67,7 +67,7 @@ class EventController extends Controller
         if (! $selectedEvent) {
             flash('Data not found! Please try again.')->error();
 
-            return redirect(route('events.index'));
+            return redirect(route('dashboard'));
         }
 
         return view('events.show', [
@@ -88,7 +88,7 @@ class EventController extends Controller
         if (! $selectedEvent) {
             flash('Data not found! Please try again.')->error();
 
-            return redirect(route('events.index'));
+            return redirect(route('dashboard'));
         }
 
         return view('events.edit', [
@@ -114,7 +114,7 @@ class EventController extends Controller
             flash('Sorry! Please try again.')->error();
         }
 
-        return redirect(route('events.index'));
+        return redirect(route('dashboard'));
     }
 
     /**
@@ -134,12 +134,13 @@ class EventController extends Controller
             flash('Sorry! Please try again.')->error();
         }
 
-        return redirect(route('events.index'));
+        return redirect(route('dashboard'));
     }
 
     public function showData()
     {
         $events = Event::all();
+
         return view('events.show_data', [
             'events' => $events,
         ]);

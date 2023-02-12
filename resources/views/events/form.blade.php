@@ -16,4 +16,4 @@
 </div>
 
 <button class="btn btn-primary" type="submit">Submit</button>
-<a class="btn btn-warning" href="{{ route('events.index') }}">Back</a>
+<a class="btn btn-warning" href="{{ route('dashboard') }}">Back</a>
